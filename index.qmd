@@ -1,11 +1,29 @@
 ---
-title: "Mackenzie-Eckles-Portfolio"
+title: "Mackenzie Eckles"
+about:
+  template: jolla
+  image: mde-pfp.png
+  links:
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/mackenzieeckles/
+    - icon: github
+      text: Github
+      href: https://github.com/MackenzieDawn
 ---
 
-This is a Quarto website.
+Mackenzie Eckles is an undergraduate at California State University Monterey Bay studying Marine Science, Chemistry, and Social Justice.
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+**Education**
 
-```{r}
-1 + 1
-```
+California State University Monterey Bay \| Seaside, CA
+
+B.S. in Marine Science \| 2024 - Present (2026)
+
+Minors in Chemistry and Social Justice & Community Leadership
+
+College of the Sequoias \| Visalia, CA
+
+A.S. in Biology \| 2021 - 2024
+
+Additional Associates in Physical Science, Natural Science, Math & Science
