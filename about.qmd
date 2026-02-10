@@ -2,8 +2,4 @@
 title: "About"
 ---
 
-About this site
-
-```{r}
-1 + 1
-```
+My name is Mackenzie Eckles and I am currently attending CSUMB. I am majoring in Marine Science and minoring in Chemistry and Social Justice & Community Leadership.
