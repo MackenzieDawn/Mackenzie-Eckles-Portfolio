@@ -1,13 +1,15 @@
 project:
   type: website
+  output-dir: docs
 
 website:
-  title: "Mackenzie-Eckles-Portfolio"
+  title: "Mackenzie Eckles ePortfolio"
   navbar:
     left:
       - href: index.qmd
-        text: Home
-      - about.qmd
+        text: "Home"
+      - href: about.qmd
+        text: "About Me"
 
 format:
   html:
@@ -17,5 +19,4 @@ format:
     css: styles.css
     toc: true
 
-editor: visual
-
+editor: source
