@@ -10,6 +10,8 @@ website:
         text: "Home"
       - href: about.qmd
         text: "About Me"
+      - href: process.qmd
+        text: "Part 1 - Describe your Process"
 
 format:
   html:

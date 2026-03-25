@@ -1,0 +1,55 @@
+---
+title: "Part 1 - Describe your Process"
+about:
+  template: jolla
+---
+
+**Respond to the following prompts:**\
+*Provide a complete answer to each of the following questions and prompts.*
+
+**Data Description**
+
+Identify your data source.
+
+My data source is the MGL2506 Microbial Energy at Sea Research Cruise.
+
+Describe your data, including variables and data types.
+
+My data has metadata of the water collected from a CTD, flow cytometry data, nutrient data, and more. Some data are characters but most are intergers.
+
+Identify the research questions you want to answer.
+
+The question I want to answer is: What is the microbial community composition of the deep chlorophyll maximum in the California Current Ecosystem?
+
+**Data Visualization**
+
+What do you want your final visualizations to look like?
+
+What do you want to highlight on your final visualizations in order to answer your research questions?
+
+How do you plan to do that?
+
+What is missing from your data or would need to change in your data to create these visualizations?
+
+**Data Cleaning** 
+
+*The answer to at least three of these questions should be “YES” for the data to meet the necessary standards to demonstrate your cleaning.*\
+*Your data source should not be an already perfectly prepared data set.*
+
+Do you need to reformat any variables into different types (e.g. factors, time, dates, strings)? Or remove information from variable values?
+
+Do you need to deal with any missing data, especially missing data coded other than NA?
+
+Do you need to filter your data? How?
+
+Do you need to create any new variables? What variables? How?
+
+Do you need to add new data (join) to your data? What data? How?
+
+Do you need pivot your data in any way? Why? How?
+
+Do you need to summarize any of the variables? Which ones? How?
+
+What other aspects of your data need to be “fixed” in order to make your data visualizations?
+
+Are there any variables you can exclude from your data?
