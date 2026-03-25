@@ -7,29 +7,40 @@ about:
 **Respond to the following prompts:**\
 *Provide a complete answer to each of the following questions and prompts.*
 
+
 **Data Description**
 
-Identify your data source.
+*Identify your data source.*
 
 My data source is the MGL2506 Microbial Energy at Sea Research Cruise.
 
-Describe your data, including variables and data types.
+*Describe your data, including variables and data types.*
 
 My data has metadata of the water collected from a CTD, flow cytometry data, nutrient data, and more. Some data are characters but most are intergers.
 
-Identify the research questions you want to answer.
+*Identify the research questions you want to answer.*
 
-The question I want to answer is: What is the microbial community composition of the deep chlorophyll maximum in the California Current Ecosystem?
+The question I want to answer is: 
+What is the microbial community composition of the deep chlorophyll maximum in the California Current Ecosystem?
+
 
 **Data Visualization**
 
-What do you want your final visualizations to look like?
+*What do you want your final visualizations to look like?*
 
-What do you want to highlight on your final visualizations in order to answer your research questions?
+I want my final visualization to be pie charts at each station depicting the microbial makeup of the station. 
 
-How do you plan to do that?
+*What do you want to highlight on your final visualizations in order to answer your research questions?*
 
-What is missing from your data or would need to change in your data to create these visualizations?
+I want to highlight regional difference in community abundance and composition.
+
+*How do you plan to do that?*
+
+I plan to do that with the pie charts, changing the size and makeups.
+
+*What is missing from your data or would need to change in your data to create these visualizations?*
+
+There is nothing missing from my data.
 
 **Data Cleaning** 
 
@@ -37,19 +48,28 @@ What is missing from your data or would need to change in your data to create th
 *Your data source should not be an already perfectly prepared data set.*
 
 Do you need to reformat any variables into different types (e.g. factors, time, dates, strings)? Or remove information from variable values?
+- I do not need to reformat any variables.
 
 Do you need to deal with any missing data, especially missing data coded other than NA?
+- Yes, there are N/As in my data.
 
 Do you need to filter your data? How?
+- Yes, I have to filter certain depths.
 
 Do you need to create any new variables? What variables? How?
+- Yes, I have to create depth categories.
 
 Do you need to add new data (join) to your data? What data? How?
+- I do not need to add more data.
 
 Do you need pivot your data in any way? Why? How?
+- I do not need to pivot my data.
 
 Do you need to summarize any of the variables? Which ones? How?
+- I will be summarizing total cell counts by adding multiple columns together.
 
 What other aspects of your data need to be “fixed” in order to make your data visualizations?
+- I don't think I will need to fix anything else as of right now.
 
 Are there any variables you can exclude from your data?
+- I can exclude most of my metadata.

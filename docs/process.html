@@ -33,7 +33,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
@@ -71,7 +70,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -111,39 +110,51 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
-    </div>
+    
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-about-jolla">
+ <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Part 1 - Describe your Process</h1>
 </div>
-
-
-
 <div class="quarto-title-meta">
-
-    
-  
-    
   </div>
-  
+</header><main class="content" id="quarto-document-content">
+<p><strong>Respond to the following prompts:</strong><br>
+<em>Provide a complete answer to each of the following questions and prompts.</em></p>
+<p><strong>Data Description</strong></p>
+<p><em>Identify your data source.</em></p>
+<p>My data source is the MGL2506 Microbial Energy at Sea Research Cruise.</p>
+<p><em>Describe your data, including variables and data types.</em></p>
+<p>My data has metadata of the water collected from a CTD, flow cytometry data, nutrient data, and more. Some data are characters but most are intergers.</p>
+<p><em>Identify the research questions you want to answer.</em></p>
+<p>The question I want to answer is: What is the microbial community composition of the deep chlorophyll maximum in the California Current Ecosystem?</p>
+<p><strong>Data Visualization</strong></p>
+<p><em>What do you want your final visualizations to look like?</em></p>
+<p>I want my final visualization to be pie charts at each station depicting the microbial makeup of the station.</p>
+<p><em>What do you want to highlight on your final visualizations in order to answer your research questions?</em></p>
+<p>I want to highlight regional difference in community abundance and composition.</p>
+<p><em>How do you plan to do that?</em></p>
+<p>I plan to do that with the pie charts, changing the size and makeups.</p>
+<p><em>What is missing from your data or would need to change in your data to create these visualizations?</em></p>
+<p>There is nothing missing from my data.</p>
+<p><strong>Data Cleaning</strong>&nbsp;</p>
+<p><em>The answer to at least three of these questions should be “YES” for the data to meet the necessary standards to demonstrate your cleaning.</em><br>
+<em>Your data source should not be an already perfectly prepared data set.</em></p>
+<p>Do you need to reformat any variables into different types (e.g.&nbsp;factors, time, dates, strings)? Or remove information from variable values? - I do not need to reformat any variables.</p>
+<p>Do you need to deal with any missing data, especially missing data coded other than NA? - Yes, there are N/As in my data.</p>
+<p>Do you need to filter your data? How? - Yes, I have to filter certain depths.</p>
+<p>Do you need to create any new variables? What variables? How? - Yes, I have to create depth categories.</p>
+<p>Do you need to add new data (join) to your data? What data? How? _ I do not need to add more data.</p>
+<p>Do you need pivot your data in any way? Why? How? - I do not need to pivot my data.</p>
+<p>Do you need to summarize any of the variables? Which ones? How? - I will be summarizing total cell counts by adding multiple columns together.</p>
+<p>What other aspects of your data need to be “fixed” in order to make your data visualizations? - I don’t think I will need to fix anything else as of right now.</p>
+<p>Are there any variables you can exclude from your data? - I can exclude most of my metadata.</p>
 
 
-</header>
-
-
-<p>Respond to the following prompts: Provide a complete answer to each of the following questions and prompts.</p>
-<p>Data Description Identify your data source. Describe your data, including variables and data types. Identify the research questions you want to answer. Data Visualization What do you want your final visualizations to look like? What do you want to highlight on your final visualizations in order to answer your research questions? How do you plan to do that? What is missing from your data or would need to change in your data to create these visualizations? Data Cleaning The answer to at least three of these questions should be “YES” for the data to meet the necessary standards to demonstrate your cleaning. Your data source should not be an already perfectly prepared data set.</p>
-<p>Do you need to reformat any variables into different types (e.g.&nbsp;factors, time, dates, strings)? Or remove information from variable values? Do you need to deal with any missing data, especially missing data coded other than NA? Do you need to filter your data? How? Do you need to create any new variables? What variables? How? Do you need to add new data (join) to your data? What data? How? Do you need pivot your data in any way? Why? How? Do you need to summarize any of the variables? Which ones? How? What other aspects of your data need to be “fixed” in order to make your data visualizations? Most will answer yes to the following for making your programming more efficient using select(), but you should have three other yeses above.</p>
-<p>Are there any variables you can exclude from your data?</p>
-
-
-
-</main> <!-- /main -->
+</main>  
+</div>
+ <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -164,13 +175,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
   const isCodeAnnotation = (el) => {
     for (const clz of el.classList) {
       if (clz.startsWith('code-annotation-')) {                     
