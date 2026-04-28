@@ -1,0 +1,115 @@
+---
+title: "Part 2 - Data Preparation"
+about:
+  template: jolla
+---
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(sf)
+library(rnaturalearth)
+library(scatterpie)
+library(tidyverse)
+library(broom)
+library(FSA)
+
+setwd("C:/Users/15598/Desktop/ME@SEA_Coding/Data")
+
+all_data <- read.csv("data_020926.csv")
+
+# --- AF columns present in data ---
+af_cols <- c("af1_ml","af2_ml","af3_ml","af4_ml","af5_ml",
+             "af6_ml","af7_ml","af8_ml","af9_ml")
+
+af_labels <- c(
+  af1_ml = "AF Group 1",
+  af2_ml = "AF Group 2",
+  af3_ml = "AF Group 3",
+  af4_ml = "AF Group 4",
+  af5_ml = "AF Group 5",
+  af6_ml = "AF Group 6",
+  af7_ml = "AF Group 7",
+  af8_ml = "AF Group 8",
+  af9_ml = "AF Group 9")
+
+# --- Build a station-level table for pie charts ---
+station_af <- all_data %>%
+  filter(DCM == "DCM") %>%
+  group_by(StationNumber, lon, lat) %>%
+  summarise(across(all_of(af_cols), ~ sum(.x, na.rm = TRUE)), .groups = "drop") %>%
+  mutate(
+    AFSum = rowSums(across(all_of(af_cols)), na.rm = TRUE)
+  ) %>%
+  filter(AFSum > 0)
+
+# --- Choose a radius scale ---
+r_min <- 0.15
+r_max <- 0.35
+station_af <- station_af %>%
+  mutate(
+    r = scales::rescale(AFSum, to = c(r_min, r_max))
+  )
+
+# --- Coastline ---
+coastline <- ne_coastline(scale = "medium", returnclass = "sf")
+ca_coast <- st_crop(coastline, xmin = -125, xmax = -114, ymin = 30, ymax = 43)
+
+# --- Map with station pies ---
+ggplot() +
+  geom_sf(data = ca_coast, color = "black", linewidth = 0.5) +
+  
+  # pies: each station is a pie, split by AF groups, size ~ AFSum
+  geom_scatterpie(
+    data = station_af,
+    aes(x = lon, y = lat, r = r),
+    cols = af_cols,
+    alpha = 0.9,
+    color = "gray20",
+    linewidth = 0.2
+  ) +
+  
+  # optional station labels
+  geom_text(
+    data = station_af,
+    aes(x = lon, y = lat, label = StationNumber),
+    size = 2.5,
+    nudge_y = 0.4
+  ) +
+  
+  coord_sf(xlim = c(-125.5, -116), ylim = c(30, 37), expand = FALSE) +
+  labs(
+    title = "Stations as Autoflourescence Groups at the Nutrient Maximum 
+    Pie Charts (Size ~ Total AF Counts)",
+    x = NULL, y = NULL,
+    fill = "AF group"
+  ) +
+  
+  scale_fill_manual(
+    name = "Autofluorescent
+        Group",
+    labels = af_labels,
+    values = c(
+      af1_ml = "#f0f921ff",
+      af2_ml = "#ffd580ff",
+      af3_ml = "#fca636ff",
+      af4_ml = "#e16462ff",
+      af5_ml = "#e94999ff",
+      af6_ml = "#b12a90ff",
+      af7_ml = "#6a00a8ff",
+      af8_ml = "#0d0887ff",
+      af9_ml = "black")
+      ) +
+
+  theme_bw(base_size = 18, base_family = "sans") +
+  theme(
+    plot.title = element_text(size = 10, face = "bold", hjust = 0.5),
+    legend.position = "right",
+    panel.grid = element_line(color = "white"),
+    panel.background = element_rect(fill = "white"),
+    legend.title = element_text(size = 9, face = "bold"),
+    legend.text  = element_text(size = 8),
+    legend.key.size = unit(0.4, "cm"),
+    legend.spacing.y = unit(0.15, "cm"))
+    
+# =============================================================================
