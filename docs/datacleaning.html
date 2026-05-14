@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Part 1 - Describe your Process – Mackenzie Eckles ePortfolio</title>
+<title>Part 2 - Data Preparation – Mackenzie Eckles ePortfolio</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -70,7 +70,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -96,12 +96,8 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">About Me</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./process.html" aria-current="page"> 
+    <a class="nav-link" href="./process.html"> 
 <span class="menu-text">Part 1 - Describe your Process</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./final.html"> 
-<span class="menu-text">Final Portfolio</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -114,48 +110,63 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+  <ul>
+  <li><a href="#af-columns-present-in-data" id="toc-af-columns-present-in-data" class="nav-link active" data-scroll-target="#af-columns-present-in-data">— AF columns present in data —</a></li>
+  <li><a href="#build-a-station-level-table-for-pie-charts" id="toc-build-a-station-level-table-for-pie-charts" class="nav-link" data-scroll-target="#build-a-station-level-table-for-pie-charts">— Build a station-level table for pie charts —</a></li>
+  <li><a href="#choose-a-radius-scale" id="toc-choose-a-radius-scale" class="nav-link" data-scroll-target="#choose-a-radius-scale">— Choose a radius scale —</a></li>
+  <li><a href="#coastline" id="toc-coastline" class="nav-link" data-scroll-target="#coastline">— Coastline —</a></li>
+  <li><a href="#map-with-station-pies" id="toc-map-with-station-pies" class="nav-link" data-scroll-target="#map-with-station-pies">— Map with station pies —</a></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">=============================================================================</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <div class="quarto-about-jolla">
  <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Part 1 - Describe your Process</h1>
+<h1 class="title">Part 2 - Data Preparation</h1>
 </div>
 <div class="quarto-title-meta">
   </div>
 </header><main class="content" id="quarto-document-content">
-<p><strong>Respond to the following prompts:</strong><br>
-<em>Provide a complete answer to each of the following questions and prompts.</em></p>
-<p><strong>Data Description</strong></p>
-<p><em>Identify your data source.</em></p>
-<p>My data source is the MGL2506 Microbial Energy at Sea Research Cruise.</p>
-<p><em>Describe your data, including variables and data types.</em></p>
-<p>My data has metadata of the water collected from a CTD, flow cytometry data, nutrient data, and more. Some data are characters but most are intergers.</p>
-<p><em>Identify the research questions you want to answer.</em></p>
-<p>The question I want to answer is: What is the microbial community composition of the deep chlorophyll maximum in the California Current Ecosystem?</p>
-<p><strong>Data Visualization</strong></p>
-<p><em>What do you want your final visualizations to look like?</em></p>
-<p>I want my final visualization to be pie charts at each station depicting the microbial makeup of the station.</p>
-<p><em>What do you want to highlight on your final visualizations in order to answer your research questions?</em></p>
-<p>I want to highlight regional difference in community abundance and composition.</p>
-<p><em>How do you plan to do that?</em></p>
-<p>I plan to do that with the pie charts, changing the size and makeups.</p>
-<p><em>What is missing from your data or would need to change in your data to create these visualizations?</em></p>
-<p>There is nothing missing from my data.</p>
-<p><strong>Data Cleaning</strong>&nbsp;</p>
-<p><em>The answer to at least three of these questions should be “YES” for the data to meet the necessary standards to demonstrate your cleaning.</em><br>
-<em>Your data source should not be an already perfectly prepared data set.</em></p>
-<p>Do you need to reformat any variables into different types (e.g.&nbsp;factors, time, dates, strings)? Or remove information from variable values? - I do not need to reformat any variables.</p>
-<p>Do you need to deal with any missing data, especially missing data coded other than NA? - Yes, there are N/As in my data.</p>
-<p>Do you need to filter your data? How? - Yes, I have to filter certain depths.</p>
-<p>Do you need to create any new variables? What variables? How? - Yes, I have to create depth categories.</p>
-<p>Do you need to add new data (join) to your data? What data? How? - I do not need to add more data.</p>
-<p>Do you need pivot your data in any way? Why? How? - I do not need to pivot my data.</p>
-<p>Do you need to summarize any of the variables? Which ones? How? - I will be summarizing total cell counts by adding multiple columns together.</p>
-<p>What other aspects of your data need to be “fixed” in order to make your data visualizations? - I don’t think I will need to fix anything else as of right now.</p>
-<p>Are there any variables you can exclude from your data? - I can exclude most of my metadata.</p>
+
+<p>library(dplyr) library(tidyr) library(ggplot2) library(sf) library(rnaturalearth) library(scatterpie) library(tidyverse) library(broom) library(FSA)</p>
+<p>setwd(“C:/Users/15598/Desktop/ME@SEA_Coding/Data”)</p>
+<p>all_data &lt;- read.csv(“data_020926.csv”)</p>
+<section id="af-columns-present-in-data" class="level1">
+<h1>— AF columns present in data —</h1>
+<p>af_cols &lt;- c(“af1_ml”,“af2_ml”,“af3_ml”,“af4_ml”,“af5_ml”, “af6_ml”,“af7_ml”,“af8_ml”,“af9_ml”)</p>
+<p>af_labels &lt;- c( af1_ml = “AF Group 1”, af2_ml = “AF Group 2”, af3_ml = “AF Group 3”, af4_ml = “AF Group 4”, af5_ml = “AF Group 5”, af6_ml = “AF Group 6”, af7_ml = “AF Group 7”, af8_ml = “AF Group 8”, af9_ml = “AF Group 9”)</p>
+</section>
+<section id="build-a-station-level-table-for-pie-charts" class="level1">
+<h1>— Build a station-level table for pie charts —</h1>
+<p>station_af &lt;- all_data %&gt;% filter(DCM == “DCM”) %&gt;% group_by(StationNumber, lon, lat) %&gt;% summarise(across(all_of(af_cols), ~ sum(.x, na.rm = TRUE)), .groups = “drop”) %&gt;% mutate( AFSum = rowSums(across(all_of(af_cols)), na.rm = TRUE) ) %&gt;% filter(AFSum &gt; 0)</p>
+</section>
+<section id="choose-a-radius-scale" class="level1">
+<h1>— Choose a radius scale —</h1>
+<p>r_min &lt;- 0.15 r_max &lt;- 0.35 station_af &lt;- station_af %&gt;% mutate( r = scales::rescale(AFSum, to = c(r_min, r_max)) )</p>
+</section>
+<section id="coastline" class="level1">
+<h1>— Coastline —</h1>
+<p>coastline &lt;- ne_coastline(scale = “medium”, returnclass = “sf”) ca_coast &lt;- st_crop(coastline, xmin = -125, xmax = -114, ymin = 30, ymax = 43)</p>
+</section>
+<section id="map-with-station-pies" class="level1">
+<h1>— Map with station pies —</h1>
+<p>ggplot() + geom_sf(data = ca_coast, color = “black”, linewidth = 0.5) +</p>
+<p># pies: each station is a pie, split by AF groups, size ~ AFSum geom_scatterpie( data = station_af, aes(x = lon, y = lat, r = r), cols = af_cols, alpha = 0.9, color = “gray20”, linewidth = 0.2 ) +</p>
+<p># optional station labels geom_text( data = station_af, aes(x = lon, y = lat, label = StationNumber), size = 2.5, nudge_y = 0.4 ) +</p>
+<p>coord_sf(xlim = c(-125.5, -116), ylim = c(30, 37), expand = FALSE) + labs( title = “Stations as Autoflourescence Groups at the Nutrient Maximum Pie Charts (Size ~ Total AF Counts)”, x = NULL, y = NULL, fill = “AF group” ) +</p>
+<p>scale_fill_manual( name = “Autofluorescent Group”, labels = af_labels, values = c( af1_ml = “#f0f921ff”, af2_ml = “#ffd580ff”, af3_ml = “#fca636ff”, af4_ml = “#e16462ff”, af5_ml = “#e94999ff”, af6_ml = “#b12a90ff”, af7_ml = “#6a00a8ff”, af8_ml = “#0d0887ff”, af9_ml = “black”) ) +</p>
+<p>theme_bw(base_size = 18, base_family = “sans”) + theme( plot.title = element_text(size = 10, face = “bold”, hjust = 0.5), legend.position = “right”, panel.grid = element_line(color = “white”), panel.background = element_rect(fill = “white”), legend.title = element_text(size = 9, face = “bold”), legend.text = element_text(size = 8), legend.key.size = unit(0.4, “cm”), legend.spacing.y = unit(0.15, “cm”))</p>
+</section>
+<section id="section" class="level1">
+<h1>=============================================================================</h1>
 
 
+</section>
 </main>  
 </div>
  <!-- /main -->

@@ -1,0 +1,263 @@
+---
+title: "Final Portfolio"
+editor: visual
+format: html
+execute: 
+  echo: false
+  warning: false
+  message: false
+embed-resources: true
+---
+
+```{r}
+#| label: Libraries
+#| include: false
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(sf)
+library(rnaturalearth)
+library(scatterpie)
+library(tidyverse)
+library(broom)
+library(FSA)
+library(mgcv)
+library(viridis)
+library(patchwork)
+library(scales)
+```
+
+## Data Description
+
+This data comes from the MGL2506 Microbial Energy at Sea Research Cruise that took place during June and July of 2025. The data set includes CTD data such as salinity, temperature, depth, oxygen, and more of the water column at 33 different stations along the coastline. The data set also includes flow cytometery data from each station at multiple different depths with columns such as cell counts, size, and complexity of autofluorescence and bacterial cells. Nutrient data is also present (nitrate, phosphate, silicate, etc.)
+
+```{r}
+#| label: Read-Data
+
+setwd("C:/Users/15598/Desktop/ME@SEA_Coding/Data")
+all_data <- read.csv("data_020926.csv")
+# file would be too large to add
+```
+
+## Data Cleaning
+
+Visualization 1:
+
+First I picked out the nine "AF groups" (AF short for autofluorescence) and gave them a more readable name so they are easier to understand in my figure. I then pulled out specific depths – the DCM (Deep Chlorophyll Maximum) and group the data by the station number & location (longitude and latitude) so that each station is treated as one unit. For each station I added up the total sum for all AF counts and removed any values of zero. Then I created a size value for each station so stations with larger sums of AF cells got larger sizes and stations with smaller sums of AF cells got smaller sizes. I also set a range so that the stations wouldn't get too large or too small. Lastly, I brought in a map and trimmed it to my sampling area.
+
+Visualization 2:
+
+Once again the AF groups were summed up to give a total cell count. This was also done with nutrient data (nitrate, phosphate, silicate, nitrite, and ammonium) to get a total sum of the nutrients. I then made a smaller subset of data and only keeping what I needed – station name, depth, autofluorescence sum, and nutrient sum. In this part I made sure they were all being treated like numbers and removed any missing data. Lastly, I set up a theme that best fit the look I was going for.
+
+```{r}
+#| label: Data-Cleaning-Vis-1
+#| include: false
+
+# --- AF columns present in data ---
+af_cols <- c("af1_ml","af2_ml","af3_ml","af4_ml","af5_ml",
+             "af6_ml","af7_ml","af8_ml","af9_ml")
+
+af_labels <- c(
+  af1_ml = "AF Group 1",
+  af2_ml = "AF Group 2",
+  af3_ml = "AF Group 3",
+  af4_ml = "AF Group 4",
+  af5_ml = "AF Group 5",
+  af6_ml = "AF Group 6",
+  af7_ml = "AF Group 7",
+  af8_ml = "AF Group 8",
+  af9_ml = "AF Group 9")
+
+# --- Build a station-level table for pie charts ---
+station_af <- all_data %>%
+  filter(DCM == "DCM") %>%
+  group_by(StationNumber, lon, lat) %>%
+  summarise(across(all_of(af_cols), ~ sum(.x, na.rm = TRUE)), .groups = "drop") %>%
+  mutate(
+    AFSum = rowSums(across(all_of(af_cols)), na.rm = TRUE)
+  ) %>%
+  filter(AFSum > 0)
+
+# --- Choose a radius scale ---
+r_min <- 0.15
+r_max <- 0.35
+station_af <- station_af %>%
+  mutate(
+    r = scales::rescale(AFSum, to = c(r_min, r_max))
+  )
+
+# --- Coastline ---
+coastline <- ne_coastline(scale = "medium", returnclass = "sf")
+ca_coast <- st_crop(coastline, xmin = -125, xmax = -114, ymin = 30, ymax = 43)
+
+```
+
+```{r}
+#| label: Data-Cleaning-Vis-2
+#| include: false
+
+all_data$AFSum <- rowSums(all_data[, c("af1_ml", "af2_ml", "af3_ml", "af4_ml",
+                                       "af5_ml","af6_ml","af7_ml","af8_ml",
+                                       "af9_ml")], na.rm = TRUE)
+
+all_data$NutSum <- rowSums(all_data[, c("NO3.umol.L.", "PO4.umol.L.",
+                                        "SIL.umol.L.", "NO2.umol.L.",
+                                        "NH4.umol.L.")])
+
+# ---- data & prep ----
+af_nut <- all_data |>
+  transmute(
+    station,
+    depth = as.numeric(depth),
+    af  = as.numeric(AFSum),
+    nut   = as.numeric(NutSum),
+  ) |>
+  filter(!is.na(nut), !is.na(af), !is.na(depth))
+
+
+# ---- global theme tweaks ----
+base_theme_old <- theme_minimal(base_size = 12) +
+  theme(
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_line(linewidth = 0.2, colour = "grey85"),
+    plot.title       = element_text(face = "bold", size = 11, margin = margin(b = 6)),
+    plot.subtitle    = element_text(size = 9, margin = margin(b = 8)),
+    axis.title.x     = element_text(margin = margin(t = 6)),
+    axis.title.y     = element_text(margin = margin(r = 6)),
+    legend.title     = element_text(face = "bold")
+  )
+
+```
+
+## Visualization 1
+
+Figure 1 shows sampling stations along the California coast, where each station is represented by a pie chart. Each slice of the pie shows the relative contribution of different autofluorescent (AF) groups at that station. The overall size of each pie chart reflects the total amount of AF measured there, so larger circles indicate higher overall counts. The map helps show how both the composition and total amount of these groups vary across the locations that were sampled.
+
+```{r}
+#| label: viz-1
+#| fig-cap: "Figure 1. Spatial distribution of autofluorescent (AF) groups at sampling stations along the California coast. Pie charts show the relative composition of nine AF groups at each station, and pie size is scaled to total AF counts."
+#| fig-alt: "Autofluorescent group composition and abundance at the nutrient maximum across California coastal stations. Each station is represented by a pie chart indicating the relative proportions of nine AF groups, with circle size proportional to total AF counts, highlighting both community structure and overall abundance patterns across the region."
+#| fig-width: 6
+#| fig-height: 4
+#| fig-align: center
+
+ggplot() +
+  geom_sf(data = ca_coast, color = "black", linewidth = 0.5) +
+  
+  # each station is a pie, split by AF groups, size ~ AFSum
+  geom_scatterpie(
+    data = station_af,
+    aes(x = lon, y = lat, r = r),
+    cols = af_cols,
+    alpha = 0.9,
+    color = "gray20",
+    linewidth = 0.2
+  ) +
+  
+  # station labels
+  geom_text(
+    data = station_af,
+    aes(x = lon, y = lat, label = StationNumber),
+    size = 2.5,
+    nudge_y = 0.4
+  ) +
+  
+  coord_sf(xlim = c(-125.5, -116), ylim = c(30, 37), expand = FALSE) +
+  labs(
+    title = "Stations as Autoflourescence Groups at the Nutrient Maximum 
+    Pie Charts (Size ~ Total AF Counts)",
+    x = NULL, y = NULL,
+    fill = "AF group"
+  ) +
+  
+  scale_fill_manual(
+    name = "Autofluorescent
+        Group",
+    labels = af_labels,
+    values = c(
+      af1_ml = "#f0f921ff",
+      af2_ml = "#ffd580ff",
+      af3_ml = "#fca636ff",
+      af4_ml = "#e16462ff",
+      af5_ml = "#e94999ff",
+      af6_ml = "#b12a90ff",
+      af7_ml = "#6a00a8ff",
+      af8_ml = "#0d0887ff",
+      af9_ml = "black")
+      ) +
+
+  theme_bw(base_size = 18, base_family = "sans") +
+  theme(
+    plot.title = element_text(size = 10, face = "bold", hjust = 0.5),
+    legend.position = "right",
+    panel.grid = element_line(color = "white"),
+    panel.background = element_rect(fill = "white"),
+    legend.title = element_text(size = 9, face = "bold"),
+    legend.text  = element_text(size = 8),
+    legend.key.size = unit(0.4, "cm"),
+    legend.spacing.y = unit(0.15, "cm"))
+```
+
+## Visualization 2
+
+Figure 2 shows how autofluorescence changes in with nutrient levels and depth. The top panel is a scatterplot where each point is a sample. The x-axis shows total nutrients, and the y-axis shows autofluorescence. The color of each point represents how deep the sample was taken. A smooth line runs through the points to show the overall trend. The bottom panel shows a broader view of the same relationship. Instead of individual points, it is a continuous surface that predicts autofluorescence based on nutrient levels and depth. This helps show how autofluorescence varies across both factors at the same time.
+
+```{r}
+#| label: viz-2
+#| fig-cap: "Figure 2. Relationship between autofluorescence, nutrient concentration, and depth. (Top) Scatterplot of autofluorescence versus total nutrients, with points colored by depth and a smoothed trend line. (Bottom) Predicted autofluorescence surface showing combined effects of nutrients and depth."
+#| fig-alt: "Autofluorescence in relation to nutrients and depth. The top panel shows individual samples, with more spread at low nutrient levels and a general decrease as nutrients increase. The bottom panel shows the overall pattern, where autofluorescence is higher near the surface and lower at greater depths, with some changes across different nutrient levels."
+#| fig-width: 6
+#| fig-height: 4
+#| fig-align: center
+
+# ---- Scatter with 1D GAM smooth ----
+af_nut_scatter <- ggplot(af_nut, aes(nut, af, color = depth)) +
+  geom_point(alpha = 0.55, size = 1.7) +
+  geom_smooth(method = "gam", formula = y ~ s(x, k = 6),
+              color = "black", fill = "grey70", linewidth = 1, se = TRUE) +
+  scale_color_viridis_c(name = "Depth (m)", option = "plasma", trans = "reverse") + # deeper = darker
+  labs(
+    title = "Autofluorescence–Nutrient Relationship",
+    subtitle = "Points colored by depth; line is a 1D GAM smooth with 95% CI",
+    x = "Total Nutrient Concentration (umol/L)",
+    y = "Autofluorescence Counts"
+  ) +
+  base_theme_old
+
+# ------- GAM --------
+af_nut_gam <-gam(af ~ s(nut, k = 6) + 
+                   s(depth, k = 6) + 
+                   te(nut, depth, k = c(6, 6)),
+                 data = af_nut, method = "REML")
+
+t_seq_af_nut <- seq(min(af_nut$nut, na.rm = TRUE), max(af_nut$nut, na.rm = TRUE), length.out = 150)
+
+z_seq_af_nut <- seq(quantile(af_nut$depth, 0.01, na.rm = TRUE),
+                    quantile(af_nut$depth, 0.99, na.rm = TRUE), length.out = 140)
+
+af_nut_grid <- expand.grid(nut = t_seq_af_nut, depth = z_seq_af_nut)
+
+af_nut_grid$pred_af_nut <- pmax(
+  predict(af_nut_gam, newdata = af_nut_grid),
+  0
+)
+
+af_nut_surface <- ggplot(af_nut_grid, aes(nut, depth, fill = pred_af_nut)) +
+  geom_raster(interpolate = TRUE) +
+  geom_contour(aes(z = pred_af_nut), color = "white", alpha = 0.7, bins = 10, linewidth = 0.25) +
+  scale_fill_viridis(name = "Pred. AF",option = "plasma") +
+  scale_y_reverse() +
+  labs(
+    title = "GAM Surface: Predicted Autofluorscence vs Nutrients and Depth",
+    subtitle = sprintf("mgcv GAM (REML). Adj. R² = %.2f,   dev. expl. = %.0f%%",
+                       summary(af_nut_gam)$r.sq, summary(af_nut_gam)$dev.expl * 100),
+    x = "Total Nutrient Concentration (umol/L)",
+    y = "Depth (m)"
+  ) +
+  base_theme_old +
+  theme(legend.key.height = unit(0.5, "cm"))
+
+# ------ combine ------
+af_nut_final_plot <- af_nut_scatter / af_nut_surface + plot_layout(heights = c(1, 1.1))
+print(af_nut_final_plot)
+```

@@ -12,6 +12,8 @@ website:
         text: "About Me"
       - href: process.qmd
         text: "Part 1 - Describe your Process"
+      - href: final.qmd
+        text: "Final Portfolio"
 
 format:
   html:
